@@ -1,8 +1,12 @@
+"use client"
+
 import { GalleryVerticalEnd } from "lucide-react"
 
-import { LoginForm } from "@/app/components/login-form"
+import { LoginForm } from "@/app/auth/components/login-form"
+import { montserrat } from "@/app/fonts"
 import Image from 'next/image'
-
+import { useEffect } from "react"
+import { Button } from "@/components/ui/button"
 export default function LoginPage() {
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
@@ -12,18 +16,19 @@ export default function LoginPage() {
                         <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
                             <GalleryVerticalEnd className="size-4" />
                         </div>
-                        College of Information and Computing Studies
+                       <p className={`${montserrat.className} text-lg font-bold`}>College of Information and Computing Studies</p>
                     </a>
                 </div>
                 <div className="flex flex-1 items-center justify-center">
                     <div className="w-full max-w-xs">
                         <LoginForm />
                     </div>
+        
                 </div>
             </div>
             <div className="bg-muted relative hidden lg:block">
                 <Image
-                    src="/assets/images/login.jpg"
+                    src="/assets/images/logo.png"
                     alt="Image"
                     width={600}
                     height={400}
