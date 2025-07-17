@@ -13,14 +13,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Plus, SquarePen, Trash } from 'lucide-react'
 import { Create } from './components/create'
-import OpenButtonModal from '../components/OpenButtonModal'
 import { AlertConfirmDialog } from '../components/ui-alert-dialog'
 import { EditIcon } from '@/app/components/icon/edit-icon'
 import Update from './components/update'
+import { AddIconButton } from '@/app/components/icon/add-icon-button'
 
 
 const Candidates = () => {
-    const [open, setOpen] = useState(false)
     const [search, setSearch] = useState("")
     const [filterCourse, setFilterCourse] = useState("")
     const [filterParty, setFilterParty] = useState("")
@@ -103,8 +102,8 @@ const Candidates = () => {
                             <option key={position} value={position}>{position}</option>
                         ))}
                     </select>
-                    <OpenButtonModal onOpen={() => setOpen(true)} />
-                    <Create open={open} onClose={() => setOpen(false)} />
+                    <AddIconButton />
+                    <Create/>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -54,7 +54,7 @@ export const navigationLinks = [
       },
       {
         title: "Voters",
-        href: "/docs/react/usage",
+        href: "/voters",
         description: "Use the components in your React app.",
       },
       {

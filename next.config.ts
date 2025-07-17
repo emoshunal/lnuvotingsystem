@@ -14,6 +14,10 @@ const nextConfig: NextConfig = {
       {
         source: "/candidates",         // alias path
         destination: "/admin/manage/candidates", // real internal route
+      },
+      {
+        source: "/voters",         // alias path
+        destination: "/admin/manage/voters", // real internal route
       }
 
     ]
