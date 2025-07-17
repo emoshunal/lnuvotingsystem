@@ -15,6 +15,9 @@ import { Plus, SquarePen, Trash } from 'lucide-react'
 import { Create } from './components/create'
 import OpenButtonModal from '../components/OpenButtonModal'
 import { AlertConfirmDialog } from '../components/ui-alert-dialog'
+import { EditIcon } from '@/app/components/icon/edit-icon'
+import Update from './components/update'
+
 
 const Candidates = () => {
     const [open, setOpen] = useState(false)
@@ -39,6 +42,11 @@ const Candidates = () => {
     const handleDelete = () => {
         // Your delete logic here
         alert("Deleted!")
+    }
+
+    const handleSave = () => {
+        // your save logic here
+        alert("saved")
     }
 
     return (
@@ -128,7 +136,8 @@ const Candidates = () => {
                                     <p><strong>Year:</strong> {candidate.year}</p>
                                 </CardContent>
                                 <CardFooter className='flex justify-end gap-2'>
-                                    <SquarePen className="cursor-pointer text-muted-foreground w-5 h-5" />
+                                    <EditIcon />
+                                    <Update />
                                     <AlertConfirmDialog
                                         trigger={<Trash className="cursor-pointer text-muted-foreground w-5 h-5" />}
                                         title="Delete your account?"
