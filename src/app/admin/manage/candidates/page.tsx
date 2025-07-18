@@ -108,7 +108,7 @@ const Candidates = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {filteredCandidates.map((candidate) => (
-                        <Card key={candidate.id} className="flex flex-row h-60 bg-white shadow-md border">
+                        <Card key={candidate.id} className="flex flex-row h-60 shadow-md border">
                             {/* Left: Image */}
                             <div className="w-2/5 h-full flex items-center justify-center">
                                 <Avatar className="w-24 h-24">

@@ -1,3 +1,8 @@
+"use client"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { candidateSchema, CandidateFormValues } from "@/schema/candidateSchema"
+import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -12,9 +17,21 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { SelectInput } from "../../components/select-input"
-import React from "react"
+import React, { useEffect } from "react"
 import { useModalStoreCreate } from "@/store/modalStore"
+import axios from "axios"
 import { DialogBox } from "../../components/ui-dialog"
+
+interface Props {
+    isOpenDialog: boolean
+    close: () => void
+    courses: any[]
+    positions: any[]
+    yearLevels: any[]
+    partyList: any[]
+}
+
+type FormData = z.infer<typeof candidateSchema>
 
 const courses = [
     { id: 1, name: "BS Information Technology" },
@@ -29,34 +46,62 @@ const courses = [
     { id: 10, name: "BS Tourism Management" },
 ]
 
-const partylist = [
-    { id: 1, name: "Partido Iskolar" },
-    { id: 2, name: "Kabisig Party" },
-]
 
-const yearlevels = [
-    { id: 1, name: "1st Year" },
-    { id: 2, name: "2nd Year" },
-    { id: 3, name: "3rd Year" },
-    { id: 4, name: "4th Year" },
-    { id: 5, name: "5th Year" },
-]
+export function Create({
 
-const positions = [
-    { id: 1, name: "President" },
-    { id: 2, name: "Vice President" },
-    { id: 3, name: "General Secretary" },
-    { id: 3, name: "Cabinet Secretary" },
-]
-export function Create() {
+}) {
     const isOpen = useModalStoreCreate((state) => state.isOpenCreate)
     const close = useModalStoreCreate((state) => state.closeModalCreate)
     const [selectedCourse, setSelectedCourse] = React.useState<string>("")
     const [selectedParty, setSelectedParty] = React.useState<string>("")
     const [selectedYearLevel, setSelectedYearLevel] = React.useState<string>("")
     const [selectedPosition, setSelectedPosition] = React.useState<string>("")
+
+    const [party, setParty] = React.useState<{ id: number; name: string }[]>([])
+    const [yearLevels, setYearLevels] = React.useState<{ id: number; level: string }[]>([])
+    const [positions, setPositions] = React.useState<{ id: number; name: string }[]>([])
+
+    useEffect(() => {
+        fetch("/api/party")
+            .then((res) => res.json())
+            .then(setParty)
+        fetch("/api/yearLevels")
+            .then((res) => res.json())
+            .then(setYearLevels)
+        fetch("/api/positions")
+            .then((res) => res.json())
+            .then(setPositions)
+    }, [])
+
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors }
+    } = useForm<FormData>({
+        resolver: zodResolver(candidateSchema),
+        defaultValues: {
+            name: "",
+            course: "",
+            yearLevelId: 0,
+            positionId: 0,
+            partyId: 0,
+        }
+    })
+
+    const onSubmit = async (data: FormData) => {
+        try {
+            await axios.post("/api/candidates", data)
+            alert("Candidate created!")
+            console.log("Candidate created:", data)
+            close()
+        } catch (error) {
+            console.error(error)
+            alert("Failed to submit candidate.")
+        }
+    }
     return (
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
             <DialogBox
                 open={isOpen}
                 onOpenChange={(o) => {
@@ -67,14 +112,15 @@ export function Create() {
                 footer={
                     <>
                         <Button variant="outline" onClick={() => useModalStoreCreate.getState().closeModalCreate()}>Cancelsss</Button>
-                        <Button className="cursor-pointer" onClick={() => alert("Candidate created!")}>Create</Button>
+                        <Button className="cursor-pointer" type="submit">Create</Button>
                     </>
                 }
             >
                 <div className="grid gap-4">
                     <div className="grid gap-3">
                         <Label htmlFor="name-1">Full Name</Label>
-                        <Input id="name-1" name="name" placeholder="Dela Cruz, Juan D." />
+                        <Input id="name" placeholder="Dela Cruz, Juan D." {...register("name")} />
+                        {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                     </div>
                     <div className="grid gap-3">
                         <Label htmlFor="username-1">Course</Label>
@@ -91,11 +137,11 @@ export function Create() {
                     <div className="grid gap-3">
                         <Label htmlFor="year-1">Year Level</Label>
                         <SelectInput
-                            data={yearlevels}
+                            data={yearLevels}
                             value={selectedYearLevel}
                             onChange={setSelectedYearLevel}
                             valueKey="id"
-                            labelKey="name"
+                            labelKey="level"
                             placeholder="Select a year level"
                             width="w-full"
                         />
@@ -115,7 +161,7 @@ export function Create() {
                     <div className="grid gap-3">
                         <Label htmlFor="party-1">Party List</Label>
                         <SelectInput
-                            data={partylist}
+                            data={party}
                             value={selectedParty}
                             onChange={setSelectedParty}
                             valueKey="id"
@@ -123,6 +169,7 @@ export function Create() {
                             placeholder="Select a party list"
                             width="w-full"
                         />
+                        {errors.partyId && <p className="text-red-500 text-sm">{errors.partyId.message}</p>}
                     </div>
 
                 </div>
