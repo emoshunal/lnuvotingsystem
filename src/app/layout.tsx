@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
 import { open_sans } from "./fonts";
+import { Providers } from "@/providers/query";
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-      className={`${open_sans.className} antialiased`}
+        className={`${open_sans.className} antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -24,9 +26,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
-        </ThemeProvider>
+          <Providers>
+            {children}
+          </Providers>
 
+        </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

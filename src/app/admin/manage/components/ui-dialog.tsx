@@ -26,7 +26,6 @@ export const DialogBox = ({
   title,
   description,
   children,
-  footer,
   className
 }: DialogBoxProps) => {
   return (
@@ -39,7 +38,6 @@ export const DialogBox = ({
 
         <div className="py-4">{children}</div>
 
-        {footer && <DialogFooter>{footer}</DialogFooter>}
       </DialogContent>
     </Dialog>
   )

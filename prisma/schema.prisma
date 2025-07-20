@@ -15,10 +15,11 @@ datasource db {
 }
 
 model Voters {
-  id          Int      @id @default(autoincrement())
-  student_id  String  @unique
+  id          Int        @id @default(autoincrement())
+  student_id  String     @unique
   name        String
-  course      String 
+  courseId    Int?
+  course      Course?    @relation(fields: [courseId], references: [id])
   pin         Int
   photo_url   String
   votes       Vote[]
@@ -27,54 +28,62 @@ model Voters {
 }
 
 model Positions {
-  id            Int         @id @default(autoincrement())
-  name      String
-  maxSelect     Int         @default(1)
-  candidates    Candidate[]
-  votes         Vote[]
+  id         Int         @id @default(autoincrement())
+  name       String
+  maxSelect  Int         @default(1)
+  candidates Candidate[]
+  votes      Vote[]
 }
 
 model Candidate {
-  id            Int         @id @default(autoincrement())
-  name          String
-  photo_url     String
-  course        String
-  partyId       Int?
-  party         Party?      @relation(fields: [partyId], references: [id])
-  positionId    Int
-  position      Positions    @relation(fields: [positionId], references: [id])
-  yearLevelId   Int?
-  yearLevel     YearLevel?  @relation(fields: [yearLevelId], references: [id])
-  votes         Vote[]
+  id          Int        @id @default(autoincrement())
+  name        String
+  photo_url   String
+  courseId    Int?
+  course      Course?    @relation(fields: [courseId], references: [id])
+  partyId     Int?
+  party       Party?     @relation(fields: [partyId], references: [id])
+  positionId  Int
+  position    Positions  @relation(fields: [positionId], references: [id])
+  yearLevelId Int?
+  yearLevel   YearLevel? @relation(fields: [yearLevelId], references: [id])
+  votes       Vote[]
 }
 
 model YearLevel {
-  id          Int         @id @default(autoincrement())
-  level       String      @unique
-  voters      Voters[]
-  candidates  Candidate[]
+  id         Int         @id @default(autoincrement())
+  level      String      @unique
+  voters     Voters[]
+  candidates Candidate[]
 }
 
 model Vote {
-  id            Int         @id @default(autoincrement())
-  voterId       Int
-  candidateId   Int
-  positionId    Int
-  voter         Voters      @relation(fields: [voterId], references: [id])
-  candidate     Candidate   @relation(fields: [candidateId], references: [id])
-  position      Positions    @relation(fields: [positionId], references: [id])
+  id          Int       @id @default(autoincrement())
+  voterId     Int
+  candidateId Int
+  positionId  Int
+  voter       Voters    @relation(fields: [voterId], references: [id])
+  candidate   Candidate @relation(fields: [candidateId], references: [id])
+  position    Positions @relation(fields: [positionId], references: [id])
 }
 
 model Party {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique
-  candidates  Candidate[]
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  candidates Candidate[]
+}
+
+model Course {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  voters     Voters[]
+  candidates Candidate[]
 }
 
 model Admin {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
-  password    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -3,7 +3,7 @@ import { create } from "zustand";
 type Candidate = {
     id?: number;
     name: string;
-    course: string;
+    courseId: string;
     yearLevelId: number;
     positionId: number;
     partyId: number;
@@ -14,6 +14,9 @@ interface CandidateStore {
     candidate: Partial<Candidate>;
     setCandidate: (candidate: Partial<Candidate>) => void;
     resetCandidate: () => void;
+
+    refreshTrigger: number;
+    triggerRefresh: () => void;
 }
 
 export const useCandidateStore = create<CandidateStore>((set) => ({
@@ -26,4 +29,7 @@ export const useCandidateStore = create<CandidateStore>((set) => ({
             },
         })),
     resetCandidate: () => set({ candidate: {} }),
+    refreshTrigger: 0,
+    triggerRefresh: () =>
+        set((state) => ({ refreshTrigger: state.refreshTrigger + 1 })),
 }))
